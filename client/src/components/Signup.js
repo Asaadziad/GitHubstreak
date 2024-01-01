@@ -3,13 +3,12 @@ import { useFormik } from "formik";
 import { checkUser } from '../services/github'
 import supabase from '../supabase/supabaseClient';
 
-export default function Signup() {
+export default function Signup(props) {
   const [errorState, setErrorState] = useState("");
   let formik = useFormik({
     initialValues: { userName: "" },
     onSubmit: (user) => {
       checkOnSignup(user.userName);
-        
     },
   });
   async function checkOnSignup(userName){
@@ -37,6 +36,7 @@ export default function Signup() {
     } else {
       setErrorState("Username is not valid");
     }
+    props.setUserCount(props.userCount + 1);
   }
   return (
     <div>

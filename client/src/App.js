@@ -9,7 +9,7 @@ export default function App() {
   return (
     <main>
     <Header/>
-    <Signup userCount={[userCount,setUserCount]}/>
+    <Signup userCount={userCount} setUserCount={setUserCount}/>
     <UserTable userCount={userCount}/>
     </main>
   )
