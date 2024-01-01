@@ -33,3 +33,17 @@
     background-color: #04AA6D;
     color: white;
 }
+
+.spinner_P7sC {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    transform-origin:center;
+    animation:spinner_svv2 .75s infinite linear;
+}
+
+@keyframes spinner_svv2 {
+    100% {
+        transform:rotate(360deg)
+    }
+}
