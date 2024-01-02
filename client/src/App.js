@@ -12,7 +12,7 @@ export default function App() {
     <Navbar/> 
     <Card/>
     {/* <Header/> */}
-    <Signup userCount={[userCount,setUserCount]}/>
+    <Signup userCount={userCount} setUserCount={setUserCount}/>
     <UserTable userCount={userCount}/>
     </main>
   )

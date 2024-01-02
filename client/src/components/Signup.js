@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import { checkUser } from '../services/github'
 import supabase from '../supabase/supabaseClient';
 
-export default function Signup() {
+export default function Signup({userCount, setUserCount}) {
   const [errorState, setErrorState] = useState("");
   let formik = useFormik({
     initialValues: { userName: "" },
@@ -29,6 +29,7 @@ export default function Signup() {
           if(error){
             console.log(error);
           }
+          setUserCount(userCount + 1);
         }
       }
       if(error){ // user not found
