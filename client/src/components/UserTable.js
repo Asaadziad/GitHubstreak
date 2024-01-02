@@ -39,13 +39,12 @@ export default function UserTable({userCount}) {
   },[userCount]);
   return (
     <>{ loading ? (<svg 
-      className="spinner_P7sC"
+      className='spinner'
       width="24" 
       height="24" 
       viewBox="0 0 24 24" 
       xmlns="http://www.w3.org/2000/svg">
-        <path d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z" />
-        </svg>) : (
+        <g className="spinner_Wezc"><circle cx="12" cy="2.5" r="1.5" opacity=".14"/><circle cx="16.75" cy="3.77" r="1.5" opacity=".29"/><circle cx="20.23" cy="7.25" r="1.5" opacity=".43"/><circle cx="21.50" cy="12.00" r="1.5" opacity=".57"/><circle cx="20.23" cy="16.75" r="1.5" opacity=".71"/><circle cx="16.75" cy="20.23" r="1.5" opacity=".86"/><circle cx="12" cy="21.5" r="1.5"/></g></svg>) : (
     <Table userData={userData} />
   )}
   </>)
