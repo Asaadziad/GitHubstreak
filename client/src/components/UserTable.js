@@ -7,10 +7,10 @@ import Table from './Table';
 export default function UserTable({userCount}) {
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState(null);
-  const [countChanged, setCountChanged] = useState(false);
   useEffect(() => {
    async function fetchData(){
     setLoading(true);
+    const t0 = performance.now();
     let {data,error} = await supabase.from('Users').select('userName');
     let users_to_fetch = [];
     let c = localStorage.getItem('cacheUsers');
@@ -24,16 +24,21 @@ export default function UserTable({userCount}) {
       });
     }
     if(users_to_fetch.length > 0){
+      let fetch_promises = [];
+      for (const user in users_to_fetch) {
+        fetch_promises.push(retrieveContributionData(users_to_fetch[user].userName));
+      }
+      let result = await Promise.all(fetch_promises);
       for(const user in users_to_fetch){
-        let result = await retrieveContributionData(users_to_fetch[user].userName);
-        let streak = calculateStreak(result);
+        //let result = await retrieveContributionData(users_to_fetch[user].userName);
+        let streak = calculateStreak(result[user]);
         const current_user = {
           userName: users_to_fetch[user].userName,
           currentStreak: streak.currentStreak.days,
         }
         cache.push(current_user);
       }
-      function compare(a, b) { return a.currentStreak == b.currentStreak ? 0 : a.currentStreak < b.currentStreak ? 1 : -1;}
+      function compare(a, b) { return a.currentStreak === b.currentStreak ? 0 : a.currentStreak < b.currentStreak ? 1 : -1;}
       cache.sort(compare);
       setUserData(cache);
       localStorage.setItem('cacheUsers', JSON.stringify(cache));
@@ -41,11 +46,13 @@ export default function UserTable({userCount}) {
     if(error) {
       console.log(error);
     }  
-
+    const t1 = performance.now();
+    console.log(t1-t0, 'ms');
     setLoading(false);
    }
    
    fetchData();
+   
 
   },[userCount]);
   return (

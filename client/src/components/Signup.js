@@ -8,6 +8,7 @@ export default function Signup({userCount, setUserCount}) {
   let formik = useFormik({
     initialValues: { userName: "" },
     onSubmit: (user) => {
+      
       checkOnSignup(user.userName);
     },
   });
@@ -15,7 +16,7 @@ export default function Signup({userCount, setUserCount}) {
     if(userName === "") return;
     let valid_user = await checkUser(userName);
     if(valid_user) {
-      const {data, error} = await supabase.from('Users').select('*').eq('userName', userName);
+      const {data, error} = await supabase.from('Users').select('*').ilike('userName', `%${userName}%`);
       if(data){
         if(data.length > 0){
           setErrorState("User already exists");
