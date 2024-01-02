@@ -33,7 +33,7 @@ export default function UserTable({userCount}) {
         }
         cache.push(current_user);
       }
-      function compare(a, b) { return a.currentStreak == b.currentStreak ? 0 : a.currentStreak < b.currentStreak ? -1 : 1;}
+      function compare(a, b) { return a.currentStreak == b.currentStreak ? 0 : a.currentStreak < b.currentStreak ? 1 : -1;}
       cache.sort(compare);
       setUserData(cache);
       localStorage.setItem('cacheUsers', JSON.stringify(cache));
