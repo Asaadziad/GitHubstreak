@@ -77,9 +77,17 @@
    return contributions;
  }
 
- export async function calculateStreak(arrayOfContributions) {
+ export function calculateStreak(arrayOfContributions) {
   
-
+  if(!arrayOfContributions) return {
+    totalContributions: 0,
+     firstContribution: '',
+     currentStreak: {
+       start: null,
+       end: null,
+       days: 0,
+     },
+   };
    const contributions = flattenGraph(arrayOfContributions);
   
    const todayDate = arrayOfContributions.at(-1).date;
@@ -119,7 +127,7 @@
        streak.currentStreak.end = todayDate;
      }
 
-   }
+}
 
    return streak;
  }

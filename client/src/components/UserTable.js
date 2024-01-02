@@ -7,30 +7,42 @@ import Table from './Table';
 export default function UserTable({userCount}) {
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [countChanged, setCountChanged] = useState(false);
   useEffect(() => {
    async function fetchData(){
     setLoading(true);
     let {data,error} = await supabase.from('Users').select('userName');
-    let users_arr = [];
-    if(data){
-      for(const user in data){
-        let result = await retrieveContributionData(data[user].userName);
-        let streak = await calculateStreak(result);
+    let users_to_fetch = [];
+    let c = localStorage.getItem('cacheUsers');
+    let cache =  c ? JSON.parse(c) : [];  
+    if(data) {
+      users_to_fetch = data.filter((user) => {
+        for(const u in cache) {
+          if(cache[u].userName === user.userName) return false;
+        }
+        return true;
+      });
+    }
+    if(users_to_fetch.length > 0){
+      for(const user in users_to_fetch){
+        let result = await retrieveContributionData(users_to_fetch[user].userName);
+        let streak = calculateStreak(result);
         const current_user = {
-          userName: data[user].userName,
+          userName: users_to_fetch[user].userName,
           currentStreak: streak.currentStreak.days,
         }
-        users_arr.push(current_user);
-        users_arr.sort((a,b) => {
+        cache.push(current_user);
+        cache.sort((a,b) => {
           return a.currentStreak < b.currentStreak;
         });
       }
+      setUserData(cache);
+      localStorage.setItem('cacheUsers', JSON.stringify(cache));
     }
     if(error) {
       console.log(error);
     }  
-    
-    setUserData(users_arr);
+
     setLoading(false);
    }
    
