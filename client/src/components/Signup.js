@@ -9,7 +9,6 @@ export default function Signup({userCount, setUserCount}) {
     initialValues: { userName: "" },
     onSubmit: (user) => {
       checkOnSignup(user.userName);
-        
     },
   });
   async function checkOnSignup(userName){
@@ -29,7 +28,7 @@ export default function Signup({userCount, setUserCount}) {
           if(error){
             console.log(error);
           }
-          setUserCount(userCount + 1);
+          
         }
       }
       if(error){ // user not found
@@ -38,6 +37,7 @@ export default function Signup({userCount, setUserCount}) {
     } else {
       setErrorState("Username is not valid");
     }
+    setUserCount(userCount + 1);
   }
   return (
     <div>
