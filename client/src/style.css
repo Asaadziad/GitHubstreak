@@ -33,3 +33,21 @@
     background-color: #04AA6D;
     color: white;
 }
+label,
+p {
+    padding: 2rem;
+    margin-top: 2rem;
+    font-size: larger;
+    font-weight: 700;
+}
+
+button {
+    padding: 2rem;
+}
+
+input {
+    border: 2px solid;
+    border-radius: 5px;
+    margin-left: 2rem;
+    padding: 0.5rem;
+}

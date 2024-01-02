@@ -16,6 +16,7 @@
 #leaderboard th {
     border: 1px solid #ddd;
     padding: 8px;
+
 }
 
 #leaderboard tr:nth-child(even) {
