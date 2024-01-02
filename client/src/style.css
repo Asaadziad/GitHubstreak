@@ -33,17 +33,31 @@
     background-color: #04AA6D;
     color: white;
 }
-
-.spinner_P7sC {
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    transform-origin:center;
-    animation:spinner_svv2 .75s infinite linear;
+label,
+p {
+    padding: 2rem;
+    margin-top: 2rem;
+    font-size: larger;
+    font-weight: 700;
 }
 
-@keyframes spinner_svv2 {
-    100% {
-        transform:rotate(360deg)
-    }
+button {
+    padding: 1rem;
+    border:2px solid #04AA6D;
+    border-radius: 0.2rem;
+    transition: 0.3s;
+}
+
+button:hover {
+    color: #ddd;
+    border:2px solid #ddd;
+    background-color: #04AA6D;
+
+}
+
+input {
+    border: 2px solid;
+    border-radius: 5px;
+    margin-left: 2rem;
+    padding: 0.5rem;
 }
