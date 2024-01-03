@@ -22,7 +22,7 @@ export default function Signup({userCount, setUserCount}) {
           setErrorState("User already exists");
         }
         if(data.length === 0) {
-          const {data, error} = await supabase.from('Users').insert({ userName: userName }).select();
+          const {data, error} = await supabase.from('Users').insert({ userName: userName.trim() }).select();
           if(data){
             console.log("Success");
           }

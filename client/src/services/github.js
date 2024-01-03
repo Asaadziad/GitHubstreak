@@ -1,15 +1,15 @@
- const TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
+const TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
 
- const year = 2024;
- const year_start = `${year}-01-01T00:00:00Z`;
- const year_end = `${year}-12-31T23:59:59Z`;
- const now = new Date();
- const today = now.toISOString().split('T')[0];
- const tomorrowDate = new Date(today);
- tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+const year = 2024;
+const year_start = `${year}-01-01T00:00:00Z`;
+const year_end = `${year}-12-31T23:59:59Z`;
+const now = new Date();
+const today = now.toISOString().split('T')[0];
+const tomorrowDate = new Date(today);
+tomorrowDate.setDate(tomorrowDate.getDate() + 1);
 
 
- const query = `
+const query = `
  query($userName:String!) {
    user(login: $userName){
      contributionsCollection(from: "${year_start}", to: "${year_end}") {
@@ -25,41 +25,48 @@
      }
    }
  }
- `;
+`;
 
- export default async function retrieveContributionData(userName) {
-   const variables = `
+function destructureData(data) {
+  if(!data.data.user) return { totalContributions: 0, weeks: [] };
+  const { data: { 
+            user: { 
+              contributionsCollection: { 
+                contributionCalendar: { totalContributions, weeks }
+              } 
+            } 
+          } 
+        } = data;
+  return {totalContributions, weeks};
+}
+
+export default async function retrieveContributionData(userName) {
+  const variables = `
    {
      "userName": "${userName}"
    }
- `
-   const body = {
-     query,
-     variables
-   }   
-   const result = fetch('https://api.github.com/graphql', {
-     method: 'POST',
-     headers: {
-      Authorization: `Bearer ${TOKEN}`,
-     },
-     body: JSON.stringify(body)
-   }).then((res) => {
-     return res.json();
-   }).then(data => {
-   
-       const { data: { user: { contributionsCollection: { contributionCalendar: { totalContributions, weeks }} }} } = data;
-     let contributionDays = weeks.reduce(((prev, cur) => {
-       return prev.concat(cur.contributionDays)
-     }),[]);
-    
-     contributionDays = contributionDays.filter((c) => {
-       if(c.date <= today) return true;
-       return false;
-     });
-     return contributionDays;
-   }).catch(err => console.log(err));
-
-   return result;
+  `
+  const body = {
+    query,
+    variables
+  }   
+  const result = await (await fetch('https://api.github.com/graphql', {
+                                  method: 'POST',
+                                  headers: {
+                                  Authorization: `Bearer ${TOKEN}`,
+                                  },
+                                  body: JSON.stringify(body) } )).json();
+  //console.log(result);
+  const {totalContributions, weeks} = destructureData(result);
+  let contributionDays = weeks.reduce(((prev, cur) => {
+    return prev.concat(cur.contributionDays)
+  }),[]);
+  contributionDays = contributionDays.filter((c) => {
+    if(c.date <= today) return true;
+    return false;
+  });
+  
+  return contributionDays;
 }
 
  /* 
@@ -68,7 +75,7 @@
  *                                                         date
  *                                                         }
  */
- export function flattenGraph(contributionDays) {
+export function flattenGraph(contributionDays) {
    const contributions = {};
    for(const contributionDay in contributionDays) {
     
@@ -77,9 +84,9 @@
    return contributions;
  }
 
- export function calculateStreak(arrayOfContributions) {
+export function calculateStreak(arrayOfContributions) {
   
-  if(!arrayOfContributions) return {
+  if(!arrayOfContributions || arrayOfContributions.length < 1) return {
     totalContributions: 0,
      firstContribution: '',
      currentStreak: {
@@ -87,13 +94,13 @@
        end: null,
        days: 0,
      },
-   };
-   const contributions = flattenGraph(arrayOfContributions);
+  };
+  const contributions = flattenGraph(arrayOfContributions);
   
-   const todayDate = arrayOfContributions.at(-1).date;
-   const firstDate = arrayOfContributions[0].date;
+  const todayDate = arrayOfContributions.at(-1).date;
+  const firstDate = arrayOfContributions[0].date;
 
-   const streak = {
+  const streak = {
     totalContributions: 0,
      firstContribution: '',
      currentStreak: {
@@ -101,9 +108,9 @@
        end: firstDate,
        days: 0,
      },
-   }
+  }
   
-   for (const contributionDate in contributions) {
+  for (const contributionDate in contributions) {
      const contributionCount = contributions[contributionDate];
     
     streak.totalContributions += contributionCount;
@@ -127,15 +134,15 @@
        streak.currentStreak.end = todayDate;
      }
 
+  }
+
+  return streak;
 }
 
-   return streak;
- }
-
- export async function checkUser(userName) {
+export async function checkUser(userName) {
    const response = await (await fetch(`https://api.github.com/users/${userName}`)).json();
-   if(response.message && response.message === "Not Found"){
+  if(response.message && response.message === "Not Found"){
      return false;
-   }
-   return true;
- }
+  }
+  return true;
+}
