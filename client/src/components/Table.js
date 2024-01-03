@@ -8,6 +8,7 @@ export default function Table({ userData }) {
           <th>Rank</th>
           <th>Name</th>
           <th>Streak Count</th>
+          <th>Total Contributions</th>
           <th>Github Profile</th>
         </tr>
         
@@ -16,6 +17,7 @@ export default function Table({ userData }) {
           <td>{i + 1}</td>
           <td>{user.userName}</td>
           <td>{user.currentStreak}</td>
+          <td>{user.totalContributions}</td>
           <td><a href={`https://github.com/${user.userName}`}>Link</a></td>
           </tr>
         ))}
