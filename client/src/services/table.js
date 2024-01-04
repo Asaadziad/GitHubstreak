@@ -52,13 +52,20 @@ const fetchUsersData = async (setLoading, setUserData) => {
           currentStreak: streak.currentStreak.days,
           totalContributions: streak.totalContributions,
         }
+        const update_result = await supabase.from('Users').update({ currentStreak: current_user.currentStreak, totalContributions: current_user.totalContributions}).ilike('userName', `%${current_user.userName}%`).select();
+        if(update_result) {
+          if(update_result.error) {
+            console.log(update_result.error); 
+          }
+        }
         cache.push(current_user);
-      } 
+       } 
     }
 
     if(error) {
       console.log(error);
     }  
+
     
     setLoading(false);
     cache.sort(compare);
