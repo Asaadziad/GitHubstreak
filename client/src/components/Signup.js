@@ -44,7 +44,6 @@ export default function Signup({userCount, setUserCount}) {
   }
   return (
     <div>
-            <p>Note: The leaderboard will be updated every 2 hours</p>
             <p>Add your name to the leaderboard</p>
             <form onSubmit={formik.handleSubmit}>
               <label htmlFor='username'>Enter your Github Username:
