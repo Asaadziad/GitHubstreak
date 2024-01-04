@@ -35,8 +35,8 @@
 }
 label,
 p {
-    padding: 2rem;
-    margin-top: 2rem;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
     font-size: larger;
     font-weight: 700;
 }

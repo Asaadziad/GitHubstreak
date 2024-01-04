@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useFormik } from "formik";
-import { checkUser } from '../services/github'
+import retrieveContributionData, { calculateStreak, checkUser } from '../services/github'
 import supabase from '../supabase/supabaseClient';
 
 export default function Signup({userCount, setUserCount}) {
@@ -22,7 +22,9 @@ export default function Signup({userCount, setUserCount}) {
           setErrorState("User already exists");
         }
         if(data.length === 0) {
-          const {data, error} = await supabase.from('Users').insert({ userName: userName.trim() }).select();
+          const github_user_data = await retrieveContributionData(userName);
+          const user_streak = calculateStreak(github_user_data);
+          const { data, error } = await supabase.from('Users').insert({ userName: userName.trim(), currentStreak: user_streak.currentStreak.days, totalContributions: user_streak.totalContributions }).select();
           if(data){
             console.log("Success");
           }

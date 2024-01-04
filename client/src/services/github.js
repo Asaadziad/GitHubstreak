@@ -140,9 +140,10 @@ export function calculateStreak(arrayOfContributions) {
 }
 
 export async function checkUser(userName) {
-   const response = await (await fetch(`https://api.github.com/users/${userName}`)).json();
+  const response = await (await fetch(`https://api.github.com/users/${userName}`)).json();
   if(response.message && response.message === "Not Found"){
      return false;
   }
   return true;
 }
+
